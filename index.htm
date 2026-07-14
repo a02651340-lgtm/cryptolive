@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Live | Elite Market Analysis</title>
+    
+    <!-- Libraries -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --black: #000000;
+            --card-bg: rgba(15, 15, 15, 0.95);
+            --gold: #d4af37;
+            --gold-bright: #ffcc33;
+            --white: #ffffff;
+            --bullish: #00ff88;
+            --bearish: #ff3333;
+            --gray: #888888;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+
+        body { 
+            background-color: var(--black); 
+            color: var(--white); 
+            overflow-x: hidden;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.95)), 
+                              url('https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 6%;
+            background: rgba(0, 0, 0, 0.98);
+            border-bottom: 1px solid #222;
+            position: fixed;
+            top: 0; width: 100%; z-index: 2000;
+            height: 70px;
+        }
+
+        .logo { font-size: 26px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; color: #fff; cursor: pointer; }
+        .logo span { color: var(--gold); }
+
+        .subscribe-btn {
+            background: linear-gradient(45deg, var(--gold), var(--gold-bright));
+            color: #000; padding: 10px 25px; border: none; border-radius: 50px;
+            font-weight: 800; cursor: pointer; text-transform: uppercase;
+        }
+
+        /* --- Ticker --- */
+        .ticker-wrap {
+            background: rgba(8, 8, 8, 0.98);
+            padding: 12px 0; border-bottom: 2px solid var(--gold);
+            overflow: hidden; width: 100%; position: fixed; top: 70px; z-index: 1999;
+        }
+
+        .ticker-track { display: flex; white-space: nowrap; animation: scroll 40s linear infinite; }
+        .ticker-item { 
+            padding: 0 40px; 
+            font-weight: 700; 
+            font-size: 14px; 
+            cursor: pointer; 
+            transition: color 0.2s;
+        }
+        .ticker-item:hover { color: var(--gold); }
+        .up { color: var(--bullish); }
+        .down { color: var(--bearish); }
+
+        @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        /* --- Content Layout --- */
+        main, .view-container { padding: 200px 6% 60px; max-width: 1400px; margin: 0 auto; min-height: 80vh; }
+        .hidden { display: none !important; }
+
+        .section-header { text-align: center; margin-bottom: 60px; }
+        .section-header h1 { font-size: clamp(32px, 5vw, 55px); font-weight: 900; text-transform: uppercase; margin-bottom: 10px; }
+        .live-tag { color: var(--gold); font-weight: 700; letter-spacing: 2px; font-size: 14px; }
+
+        /* --- News Grid --- */
+        .news-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; margin-bottom: 50px; }
+        .news-card { 
+            background: var(--card-bg); 
+            border-radius: 15px; 
+            overflow: hidden; 
+            border: 1px solid #333; 
+            transition: 0.3s; 
+            backdrop-filter: blur(10px); 
+            cursor: pointer; 
+            position: relative;
+        }
+        .news-card:hover { border-color: var(--gold); transform: translateY(-8px); }
+        
+        .card-badge {
+            position: absolute; top: 15px; right: 15px;
+            background: rgba(212, 175, 55, 0.2);
+            color: var(--gold);
+            padding: 5px 12px; border-radius: 20px; font-size: 10px; font-weight: 900;
+            border: 1px solid var(--gold); text-transform: uppercase; z-index: 10;
+        }
+
+        .img-container { width: 100%; height: 230px; background: #1a1a1a; overflow: hidden; }
+        .img-container img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        .news-card:hover .img-container img { transform: scale(1.1); }
+
+        .news-info { padding: 25px; }
+        .news-info h3 { font-size: 20px; margin-bottom: 12px; color: var(--gold); line-height: 1.3; }
+        .news-info p { font-size: 14px; color: #ccc; line-height: 1.6; }
+
+        /* --- Modal Styles FIXED & HIGHLIGHTED --- */
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); display: none; justify-content: center; align-items: center; z-index: 3000; }
+        .modal { 
+            background: #111; 
+            padding: 40px; 
+            width: 90%; 
+            max-width: 500px; 
+            border-radius: 20px; 
+            border: 2px solid var(--gold); 
+            position: relative; 
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+        }
+        
+        .modal h2 { 
+            text-align: center; 
+            color: var(--gold); 
+            font-size: 24px; 
+            font-weight: 900; 
+            margin-bottom: 25px; 
+            text-transform: uppercase; 
+            background: rgba(212, 175, 55, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .close { position: absolute; top: 15px; right: 20px; color: #fff; cursor: pointer; font-size: 24px; }
+        
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; color: var(--gold); font-size: 12px; font-weight: 700; margin-bottom: 8px; text-transform: uppercase; }
+        
+        #sheet-form input, #sheet-form select { 
+            width: 100%; 
+            padding: 12px; 
+            background: #000; 
+            border: 1px solid #333; 
+            color: #fff; 
+            border-radius: 8px; 
+            outline: none; 
+            font-size: 16px;
+        }
+        
+        /* Highlight input focus */
+        #sheet-form input:focus { border-color: var(--gold); }
+
+        /* Fix Phone Input alignment */
+        .iti { width: 100% !important; }
+        .iti__country-list { background-color: #111; color: #fff; border: 1px solid var(--gold); }
+
+        .submit-btn-container { text-align: center; margin-top: 25px; }
+        
+        .submit-btn { 
+            background: linear-gradient(45deg, var(--gold), var(--gold-bright));
+            color: #000; 
+            padding: 15px 40px; 
+            border: none; 
+            border-radius: 50px; 
+            font-weight: 900; 
+            font-size: 16px;
+            cursor: pointer; 
+            text-transform: uppercase; 
+            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+        }
+        
+        .submit-btn:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(212, 175, 55, 0.6); }
+
+        /* --- Article View --- */
+        .back-btn { color: var(--gold); cursor: pointer; margin-bottom: 30px; font-weight: 700; font-size: 14px; display: inline-block; }
+        .full-content { max-width: 900px; margin: 0 auto; animation: fadeIn 0.5s ease; }
+        .hero-img { width: 100%; height: 400px; border-radius: 20px; object-fit: cover; margin-bottom: 30px; border: 1px solid #333; }
+        
+        /* --- Coin View --- */
+        .coin-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 40px; background: #111; padding: 30px; border-radius: 15px; border-left: 5px solid var(--gold); }
+        .coin-price-large { font-size: 50px; font-weight: 900; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        .stat-box { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px; border: 1px solid #222; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        footer { background: rgba(0, 0, 0, 0.98); border-top: 1px solid #222; padding: 60px 6% 30px; text-align: center; }
+        
+        @media (max-width: 800px) { main, .view-container { padding-top: 170px; } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo" onclick="showView('home-view')">CRYPTO<span> LIVE</span></div>
+        <button class="subscribe-btn" onclick="openModal()">SUBSCRIBE</button>
+    </header>
+
+    <div class="ticker-wrap">
+        <div class="ticker-track" id="ticker-track">
+            <!-- Prices from Binance -->
+        </div>
+    </div>
+
+    <!-- HOME VIEW -->
+    <main id="home-view" class="view-container">
+        <section class="section-header">
+            <span class="live-tag">● LIVE UPDATES</span>
+            <h1>Market Intelligence</h1>
+        </section>
+
+        <div class="news-grid" id="intelligence-grid">
+            <!-- JS Inject Cards -->
+        </div>
+    </main>
+
+    <!-- ARTICLE VIEW -->
+    <div id="article-view" class="view-container hidden">
+        <div class="back-btn" onclick="showView('home-view')">← BACK TO DASHBOARD</div>
+        <div class="full-content">
+            <img id="art-img" class="hero-img" src="">
+            <h2 id="art-title" style="font-size: 32px; color: var(--gold); margin-bottom: 20px;"></h2>
+            <div id="art-text" style="font-size: 18px; color: #ccc; line-height: 1.8;"></div>
+        </div>
+    </div>
+
+    <!-- COIN DETAIL VIEW -->
+    <div id="coin-view" class="view-container hidden">
+        <div class="back-btn" onclick="showView('home-view')">← BACK TO DASHBOARD</div>
+        <div class="full-content">
+            <div class="coin-header">
+                <div>
+                    <h1 id="coin-name" style="font-size: 24px; color: var(--gold);"></h1>
+                    <div id="coin-symbol" style="color: var(--gray); font-weight: bold;"></div>
+                </div>
+                <div id="coin-price" class="coin-price-large"></div>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-box"><label>24h High</label><span id="stat-high"></span></div>
+                <div class="stat-box"><label>24h Low</label><span id="stat-low"></span></div>
+                <div class="stat-box"><label>24h Change</label><span id="stat-change"></span></div>
+                <div class="stat-box"><label>Volume</label><span id="stat-vol"></span></div>
+            </div>
+        </div>
+    </div>
+    
+        <!-- MODAL -->
+    <div class="overlay" id="overlay">
+        <div class="modal">
+            <span class="close" onclick="closeModal()">&times;</span>
+            
+            <!-- WRAPPER START -->
+            <div id="form-content">
+                <h2>Subscribe Now</h2>
+                <form id="sheet-form">
+                    <div class="form-group"><label>Full Name</label><input type="text" name="Name" required></div>
+                    <div class="form-group"><label>Age</label><input type="number" name="Age" required></div>
+                    <div class="form-group"><label>Phone Number</label><input type="tel" id="phone" name="Phone" required></div>
+                    <div class="form-group"><label>Email Address</label><input type="email" name="Email" required></div>
+                    <div class="form-group"><label>Trading Experience</label>
+                        <select name="Experience" required>
+                            <option value="Beginner">Beginner</option>
+                            <option value="Intermediate">Intermediate</option>
+                            <option value="Professional">Professional</option>
+                        </select>
+                    </div>
+                    <div class="submit-btn-container"><button type="submit" class="submit-btn" id="submit-text">Subscribe</button></div>
+                </form>
+            </div>
+            <!-- WRAPPER END -->
+
+            <div id="success-msg" class="hidden" style="text-align:center; color:var(-bullish); margin: 40px 0; font-weight:900; font-size: 32px; text-transform: Sentence;">Thank You For Subscribing</div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="logo">CRYPTO<span> LIVE</span></div>
+        <p>&copy; 2026 Crypto Live Terminal.</p>
+    </footer>
+
+    <script>
+        // --- 9 TOPICS DATA ---
+        const intelligenceData = [
+            { id: 1, badge: 'BREAKING', title: 'Bitcoin ETFs Surge: BlackRock IBIT Hits $20B', img: 'https://6a554e0f35c84f09d234257c.imgix.net/ChatGPT%20Image%20Jul%2014,%202026,%2002_32_36%20AM.png', text: 'Institutional adoption is accelerating at an unprecedented pace as spot Bitcoin ETFs from major asset managers like BlackRock and Fidelity continue attracting billions in fresh capital. These sustained inflows are steadily absorbing available Bitcoin from the open market, reducing exchange reserves and tightening overall liquidity. As more institutions allocate Bitcoin to long-term investment portfolios, the circulating supply available for trading continues to shrink. Many analysts believe this growing supply-demand imbalance could amplify price volatility and support higher valuations if demand remains strong. With traditional finance increasingly embracing digital assets, Bitcoin is solidifying its position as a mainstream institutional investment and a strategic store of value in the global financial system.' },
+            { id: 2, badge: 'NETWORK', title: 'Solana Ecosystem TVL Hits 2-Year High', img: 'https://images.unsplash.com/photo-1639322537228-f710d846310a?auto=format&fit=crop&w=800&q=80', text: ' Solanas DeFi ecosystem is experiencing remarkable growth as decentralized exchanges (DEXs) continue to attract strong trading activity from users around the world. Fast transaction speeds, low network fees, and an expanding ecosystem of DeFi applications have made Solana an increasingly popular destination for traders, liquidity providers, and developers alike. New protocols and token launches are contributing to higher on-chain activity, while rising user participation is helping push DEX volumes to new milestones. As capital flows into the ecosystem and innovation accelerates, Solana is strengthening its position as one of the leading blockchain networks for decentralized finance. If this momentum continues, many market participants expect Solana to remain a major hub for DeFi growth and on-chain trading in the months ahead.' },
+            { id: 3, badge: 'SECURITY', title: 'Security Alert: New Hardware Wallet Malware', img: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=800&q=80', text: 'Forensic researchers have identified a sophisticated new strain of malware designed to silently replace cryptocurrency wallet addresses during copy-and-paste operations. Once a victim copies a wallet address, the malware automatically swaps it with an attacker-controlled address, making the change difficult to notice before a transaction is confirmed. Because blockchain transactions are irreversible, even a single mistake can result in the permanent loss of funds. Security experts are urging users to carefully verify the first and last several characters of every wallet address before sending crypto, enable hardware wallets where possible, and keep antivirus software and operating systems up to date. As digital asset adoption continues to grow, this discovery highlights the increasing sophistication of cybercriminals and the importance of strong security practices when managing cryptocurrency holdings.' },
+            { id: 4, badge: 'LEGAL', title: 'XRP Legal Victory: SEC Appeal Deadlines Pass', img: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=800&q=80', text: 'The long-running legal dispute between Ripple and the U.S. Securities and Exchange Commission (SEC) has reached a significant milestone, bringing greater regulatory clarity to the cryptocurrency market. After years of uncertainty, the latest developments have been widely interpreted by market participants as a positive step for Ripple and the broader digital asset industry. Investors are closely monitoring the implications for XRP, with improved legal certainty boosting confidence and fueling renewed market optimism. Analysts believe that clearer regulatory guidance could encourage greater institutional participation, expand partnerships, and support broader adoption of blockchain-based payment solutions. While the regulatory landscape for digital assets continues to evolve, many see this case as a landmark moment that may influence how cryptocurrencies are regulated and classified in the United States for years to come.' },
+            { id: 5, badge: 'AI', title: 'NVIDIA Surge Propels AI Tokens to New Heights', img: 'https://images.unsplash.com/photo-1675271591211-126ad94e495d?auto=format&fit=crop&w=800&q=80', text: 'NVIDIAs continued surge is driving renewed optimism across the AI cryptocurrency sector, as growing demand for advanced AI chips and expanding investments in artificial intelligence fuel interest in blockchain-based AI projects. Tokens linked to decentralized computing, GPU networks, machine learning, and AI infrastructure have seen increased attention from investors who view the convergence of AI and blockchain as a major long-term growth opportunity. While the sector remains highly volatile, the strong performance of AI leaders like NVIDIA has reinforced confidence that AI-focused cryptocurrencies could benefit from accelerating enterprise adoption, technological innovation, and rising demand for decentralized AI solutions.' },
+            { id: 6, badge: 'POLICY', title: 'MiCA Regulations Go Live in Europe', img: 'https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&w=800&q=80', text: 'The European Unions Markets in Crypto-Assets (MiCA) framework is now officially in effect, establishing the first comprehensive and unified regulatory framework for cryptocurrencies across all 27 EU member states. The new rules are designed to provide greater legal certainty for crypto exchanges, stablecoin issuers, wallet providers, and other digital asset businesses while strengthening consumer protection, market integrity, and financial stability. By creating a single licensing regime, MiCA enables compliant crypto firms to operate more easily across the EU without navigating different national regulations. Industry participants view the framework as a major milestone for digital asset adoption, as it encourages innovation while setting clear compliance standards that could attract institutional investment and serve as a model for crypto regulation in other regions around the world.' },
+            { id: 7, badge: 'WHALES', title: '$500M in BTC Moved to Cold Storage', img: 'https://images.unsplash.com/photo-1518546305927-5a555bb7020d?auto=format&fit=crop&w=800&q=80', text: 'Large cryptocurrency whale wallets are increasingly moving significant amounts of digital assets away from centralized exchanges into private wallets, a trend that many market observers interpret as a sign of long-term holding confidence rather than an immediate intent to sell. Reduced exchange balances can indicate that investors are choosing self-custody and positioning for future price appreciation instead of short-term trading. While on-chain wallet movements alone do not guarantee future market direction, sustained accumulation by large holders is often viewed as a positive indicator of institutional and high-net-worth investor sentiment. As supply available on exchanges declines and demand remains resilient, many analysts believe these accumulation trends could contribute to tighter market conditions and support Bitcoins long-term investment narrative.' },
+            { id: 8, badge: 'ETHEREUM', title: 'Ethereum Pectra Upgrade: UX Milestone', img: 'https://6a554e0f35c84f09d234257c.imgix.net/ChatGPT%20Image%20Jul%2014,%202026,%2002_27_01%20AM.png', text: 'Development of Ethereums next hard fork is centered on enhancing the overall user experience while strengthening the networks staking infrastructure. Proposed upgrades aim to make crypto wallets more intuitive through features such as improved account management, streamlined transaction flows, and greater support for smart accounts, reducing friction for both new and experienced users. On the staking side, developers are exploring improvements that could increase validator efficiency, optimize network performance, and simplify operational requirements without compromising security or decentralization. As Ethereum continues to evolve, these enhancements are expected to improve usability, encourage broader adoption, and reinforce the networks position as the leading platform for decentralized applications and smart contracts.' },
+            { id: 9, badge: 'STABLECOINS', title: 'USDT Market Cap Crosses $120B Mark', img: 'https://6a554e0f35c84f09d234257c.imgix.net/sandbox/ChatGPT Image Jul 14, 2026, 02_07_34 AM.png', text: 'Stablecoins are becoming an increasingly important part of the global digital asset ecosystem as users seek reliable exposure to the U.S. dollar amid inflation, currency depreciation, and economic uncertainty in various regions. By leveraging blockchain networks, stablecoins enable fast, low-cost, and borderless transactions without relying on traditional banking infrastructure, making them attractive for payments, remittances, trading, and savings. Their growing adoption across decentralized finance (DeFi), cross-border commerce, and institutional settlements highlights the expanding role of tokenized dollars in the global economy. As regulatory frameworks mature and demand for digital dollar access continues to rise, many analysts expect stablecoins to remain a key driver of blockchain adoption and the broader evolution of decentralized financial services.' }
+            
+        ];
+        let marketData = [];
+        let phoneInput;
+
+        window.onload = () => {
+            renderIntelligence();
+            fetchPrices();
+            setInterval(fetchPrices, 15000);
+
+            // Initialize Phone Input
+            const phoneElem = document.querySelector("#phone");
+            if(phoneElem) {
+                phoneInput = window.intlTelInput(phoneElem, {
+                    utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+                    initialCountry: "auto",
+                    geoIpLookup: callback => {
+                        fetch('https://ipapi.co/json').then(res => res.json()).then(data => callback(data.country_code)).catch(() => callback('us'));
+                    }
+                });
+            }
+        };
+
+        function renderIntelligence() {
+            const grid = document.getElementById('intelligence-grid');
+            grid.innerHTML = intelligenceData.map(item => `
+                <div class="news-card" onclick="openArticle(${item.id})">
+                    <div class="card-badge">${item.badge}</div>
+                    <div class="img-container">
+                        <img src="${item.img}" onerror="this.src='https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=800&q=80'">
+                    </div>
+                    <div class="news-info">
+                        <h3>${item.title}</h3>
+                        <p>${item.text.substring(0, 100)}...</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showView(viewId) {
+            document.querySelectorAll('.view-container').forEach(v => v.classList.add('hidden'));
+            document.getElementById(viewId).classList.remove('hidden');
+            window.scrollTo(0,0);
+        }
+
+        function openArticle(id) {
+            const art = intelligenceData.find(x => x.id === id);
+            document.getElementById('art-img').src = art.img;
+            document.getElementById('art-title').innerText = art.title;
+            document.getElementById('art-text').innerText = art.text;
+            showView('article-view');
+        }
+
+        async function fetchPrices() {
+            try {
+                const symbols = ["BTCUSDT","ETHUSDT","SOLUSDT","BNBUSDT","XRPUSDT","ADAUSDT","AVAXUSDT","LINKUSDT"];
+                const response = await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbols=${JSON.stringify(symbols)}`);
+                marketData = await response.json();
+                let html = '';
+                marketData.forEach(coin => {
+                    const price = parseFloat(coin.lastPrice).toLocaleString(undefined, { minimumFractionDigits: 2 });
+                    const change = parseFloat(coin.priceChangePercent).toFixed(2);
+                    html += `<div class="ticker-item" onclick="openCoinDetail('${coin.symbol}')">${coin.symbol.replace('USDT','')}: <span class="${change >= 0 ? 'up' : 'down'}">${change >= 0 ? '▲' : '▼'} $${price}</span></div>`;
+                });
+                document.getElementById('ticker-track').innerHTML = html + html;
+            } catch (e) { console.error("Ticker error"); }
+        }
+
+        function openCoinDetail(symbol) {
+            const coin = marketData.find(c => c.symbol === symbol);
+            document.getElementById('coin-name').innerText = symbol.replace('USDT', '');
+            document.getElementById('coin-symbol').innerText = symbol;
+            document.getElementById('coin-price').innerText = `$${parseFloat(coin.lastPrice).toLocaleString()}`;
+            document.getElementById('stat-high').innerText = `$${parseFloat(coin.highPrice).toLocaleString()}`;
+            document.getElementById('stat-low').innerText = `$${parseFloat(coin.lowPrice).toLocaleString()}`;
+            document.getElementById('stat-change').innerText = `${coin.priceChangePercent}%`;
+            document.getElementById('stat-vol').innerText = Math.round(coin.volume).toLocaleString();
+            showView('coin-view');
+        }
+
+        // CONNECT SPREADSHEET
+        document.getElementById('sheet-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submit-text');
+            btn.innerText = "Processing...";
+            btn.disabled = true;
+
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbzDQVlZwt2e6B670hPRh4bh88vkirVW6WGmimCjjAWZWtPlSXYMcp3FiEbGNA2_MQYjGA/exec';
+            const params = new URLSearchParams(new FormData(this));
+            if(phoneInput) params.set('Phone', phoneInput.getNumber());
+
+            fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: params })
+            .then(() => {
+                // HIDE ENTIRE WRAPPER INCLUDING TITLE
+                document.getElementById('form-content').classList.add('hidden');
+                // SHOW SUCCESS
+                document.getElementById('success-msg').classList.remove('hidden');
+            }).catch(() => {
+                btn.innerText = "Activate Access";
+                btn.disabled = false;
+            });
+        });
+
+        function openModal() { 
+            // Reset modal visibility if reopened
+            document.getElementById('form-content').classList.remove('hidden');
+            document.getElementById('success-msg').classList.add('hidden');
+            document.getElementById('overlay').style.display = 'flex'; 
+        }
+        function closeModal() { document.getElementById('overlay').style.display = 'none'; }
+    </script>
+</body>
+</html>
