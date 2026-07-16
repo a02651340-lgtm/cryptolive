@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <!-- TradingView Widget -->
+    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
 
     <style>
         :root {
@@ -35,6 +38,67 @@
             background-attachment: fixed;
         }
 
+        /* --- ANIMATED BACKGROUND GLOW --- */
+        body::after {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 40%, rgba(212, 175, 55, 0.04) 0%, transparent 60%),
+                        radial-gradient(circle at 70% 80%, rgba(0, 255, 136, 0.03) 0%, transparent 50%),
+                        radial-gradient(circle at 50% 50%, rgba(255, 51, 51, 0.02) 0%, transparent 40%);
+            animation: bgDrift 25s ease-in-out infinite alternate;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes bgDrift {
+            0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+            33% { transform: translate(1%, 2%) scale(1.05) rotate(1deg); }
+            66% { transform: translate(-1%, 1%) scale(1.02) rotate(-1deg); }
+            100% { transform: translate(2%, -1%) scale(1.08) rotate(0.5deg); }
+        }
+
+        /* --- FLOATING PARTICLES --- */
+        .particle-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: var(--gold);
+            border-radius: 50%;
+            opacity: 0;
+            animation: particleFloat linear infinite;
+        }
+        .particle:nth-child(1) { left: 10%; animation-duration: 18s; animation-delay: 0s; width: 4px; height: 4px; }
+        .particle:nth-child(2) { left: 25%; animation-duration: 22s; animation-delay: 2s; width: 2px; height: 2px; }
+        .particle:nth-child(3) { left: 40%; animation-duration: 20s; animation-delay: 4s; width: 5px; height: 5px; }
+        .particle:nth-child(4) { left: 55%; animation-duration: 25s; animation-delay: 1s; width: 3px; height: 3px; }
+        .particle:nth-child(5) { left: 70%; animation-duration: 19s; animation-delay: 3s; width: 4px; height: 4px; }
+        .particle:nth-child(6) { left: 85%; animation-duration: 23s; animation-delay: 5s; width: 2px; height: 2px; }
+        .particle:nth-child(7) { left: 15%; animation-duration: 21s; animation-delay: 6s; width: 6px; height: 6px; }
+        .particle:nth-child(8) { left: 60%; animation-duration: 24s; animation-delay: 2.5s; width: 3px; height: 3px; }
+        .particle:nth-child(9) { left: 45%; animation-duration: 17s; animation-delay: 7s; width: 4px; height: 4px; }
+        .particle:nth-child(10) { left: 90%; animation-duration: 26s; animation-delay: 4.5s; width: 5px; height: 5px; }
+
+        @keyframes particleFloat {
+            0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translateY(-10vh) rotate(720deg); opacity: 0; }
+        }
+
         header {
             display: flex;
             justify-content: space-between;
@@ -45,15 +109,142 @@
             position: fixed;
             top: 0; width: 100%; z-index: 2000;
             height: 70px;
+            animation: headerPulse 3s ease-in-out infinite;
         }
 
-        .logo { font-size: 26px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; color: #fff; cursor: pointer; }
+        @keyframes headerPulse {
+            0%, 100% { border-bottom-color: #222; }
+            50% { border-bottom-color: var(--gold); box-shadow: 0 2px 30px rgba(212, 175, 55, 0.05); }
+        }
+
+        .logo { 
+            font-size: 26px; 
+            font-weight: 900; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            cursor: pointer;
+            color: var(--white);
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.15);
+            animation: logoGlow 4s ease-in-out infinite;
+            transition: transform 0.3s;
+        }
+        .logo:hover { transform: scale(1.02); }
         .logo span { color: var(--gold); }
+
+        @keyframes logoGlow {
+            0%, 100% { text-shadow: 0 0 10px rgba(212, 175, 55, 0.1); }
+            50% { text-shadow: 0 0 30px rgba(212, 175, 55, 0.25), 0 0 60px rgba(212, 175, 55, 0.1); }
+        }
 
         .subscribe-btn {
             background: linear-gradient(45deg, var(--gold), var(--gold-bright));
             color: #000; padding: 10px 25px; border: none; border-radius: 50px;
             font-weight: 800; cursor: pointer; text-transform: uppercase;
+            animation: btnGlow 2.5s ease-in-out infinite;
+            transition: transform 0.2s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+            z-index: 10;
+        }
+        .subscribe-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+            animation: btnShine 3s ease-in-out infinite;
+        }
+        @keyframes btnShine {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+        .subscribe-btn:hover { transform: scale(1.05) translateY(-2px); box-shadow: 0 8px 30px rgba(212, 175, 55, 0.4); }
+
+        @keyframes btnGlow {
+            0%, 100% { box-shadow: 0 0 10px rgba(212, 175, 55, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(212, 175, 55, 0.6); }
+        }
+
+        /* --- TRADER CHARACTER - PERMANENTLY VISIBLE & CLICKABLE --- */
+        .trader-overlay {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 9999;
+            pointer-events: auto;
+            cursor: pointer;
+            opacity: 1;
+            transition: transform 0.3s ease;
+        }
+        .trader-overlay:hover {
+            transform: scale(1.08);
+        }
+        .trader-overlay:active {
+            transform: scale(0.92);
+        }
+        .trader-container {
+            position: relative;
+            width: 120px;
+            height: 150px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: traderBounce 2s ease-in-out infinite;
+        }
+        @keyframes traderBounce {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        .trader-emoji {
+            font-size: 70px;
+            animation: traderWave 3s ease-in-out infinite;
+            filter: drop-shadow(0 10px 30px rgba(212, 175, 55, 0.3));
+        }
+        @keyframes traderWave {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-10deg); }
+            75% { transform: rotate(10deg); }
+        }
+        .trader-speech {
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid var(--gold);
+            border-radius: 15px;
+            padding: 10px 15px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--gold);
+            text-align: center;
+            margin-top: 5px;
+            animation: speechPulse 2s ease-in-out infinite;
+            max-width: 140px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 25px rgba(212, 175, 55, 0.2);
+            pointer-events: none;
+        }
+        @keyframes speechPulse {
+            0%, 100% { border-color: var(--gold); box-shadow: 0 0 20px rgba(212, 175, 55, 0.2); }
+            50% { border-color: #ffcc33; box-shadow: 0 0 40px rgba(212, 175, 55, 0.5); }
+        }
+        .trader-speech span {
+            display: block;
+            font-size: 10px;
+            color: #888;
+            font-weight: 400;
+            margin-top: 3px;
+        }
+        .click-ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(212, 175, 55, 0.3);
+            border: 2px solid var(--gold);
+            animation: rippleAnim 0.8s ease-out forwards;
+            pointer-events: none;
+        }
+        @keyframes rippleAnim {
+            0% { width: 20px; height: 20px; opacity: 1; transform: translate(-50%, -50%) scale(0); }
+            100% { width: 120px; height: 120px; opacity: 0; transform: translate(-50%, -50%) scale(1); }
         }
 
         /* --- Ticker --- */
@@ -61,43 +252,145 @@
             background: rgba(8, 8, 8, 0.98);
             padding: 12px 0; border-bottom: 2px solid var(--gold);
             overflow: hidden; width: 100%; position: fixed; top: 70px; z-index: 1999;
+            animation: tickerBorder 3s ease-in-out infinite;
         }
 
-        .ticker-track { display: flex; white-space: nowrap; animation: scroll 40s linear infinite; }
+        @keyframes tickerBorder {
+            0%, 100% { border-bottom-color: var(--gold); }
+            50% { border-bottom-color: #ffcc33; box-shadow: 0 2px 20px rgba(212, 175, 55, 0.1); }
+        }
+
+        .ticker-track { display: flex; white-space: nowrap; animation: scroll 25s linear infinite; }
         .ticker-item { 
             padding: 0 40px; 
             font-weight: 700; 
             font-size: 14px; 
             cursor: pointer; 
-            transition: color 0.2s;
+            transition: all 0.3s;
         }
-        .ticker-item:hover { color: var(--gold); }
+        .ticker-item:hover { color: var(--gold); transform: scale(1.05); }
         .up { color: var(--bullish); }
         .down { color: var(--bearish); }
 
         @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
         /* --- Content Layout --- */
-        main, .view-container { padding: 200px 6% 60px; max-width: 1400px; margin: 0 auto; min-height: 80vh; }
+        main, .view-container { padding: 200px 6% 60px; max-width: 1400px; margin: 0 auto; min-height: 80vh; position: relative; z-index: 1; }
         .hidden { display: none !important; }
 
-        .section-header { text-align: center; margin-bottom: 60px; }
-        .section-header h1 { font-size: clamp(32px, 5vw, 55px); font-weight: 900; text-transform: uppercase; margin-bottom: 10px; }
-        .live-tag { color: var(--gold); font-weight: 700; letter-spacing: 2px; font-size: 14px; }
+        .section-header { text-align: center; margin-bottom: 60px; animation: fadeInUp 0.8s ease; }
+        .section-header h1 { 
+            font-size: clamp(32px, 5vw, 55px); 
+            font-weight: 900; 
+            text-transform: uppercase; 
+            margin-bottom: 10px;
+            color: var(--white);
+            text-shadow: 0 0 30px rgba(212, 175, 55, 0.15);
+            animation: titleGlow 5s ease-in-out infinite;
+        }
+
+        @keyframes titleGlow {
+            0%, 100% { text-shadow: 0 0 20px rgba(212, 175, 55, 0.1); }
+            50% { text-shadow: 0 0 50px rgba(212, 175, 55, 0.2), 0 0 80px rgba(212, 175, 55, 0.05); }
+        }
+
+        .live-tag { 
+            color: var(--gold); 
+            font-weight: 700; 
+            letter-spacing: 2px; 
+            font-size: 14px;
+            animation: pulse 2s ease-in-out infinite;
+            display: inline-block;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.97); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Chart Grid --- */
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+        .chart-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 15px;
+            border: 1px solid #333;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: cardFloat 6s ease-in-out infinite;
+        }
+        .chart-card:nth-child(2) { animation-delay: 0.5s; }
+        .chart-card:nth-child(3) { animation-delay: 1s; }
+        .chart-card:nth-child(4) { animation-delay: 0.3s; }
+
+        @keyframes cardFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
+        }
+
+        .chart-card:hover {
+            border-color: var(--gold);
+            transform: translateY(-8px) scale(1.01);
+            box-shadow: 0 10px 40px rgba(212, 175, 55, 0.15);
+        }
+        .chart-card .chart-title {
+            color: var(--gold);
+            font-weight: 700;
+            font-size: 14px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .chart-card .chart-price {
+            font-size: 20px;
+            font-weight: 900;
+        }
+        .chart-container {
+            width: 100%;
+            height: 200px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
 
         /* --- News Grid --- */
-        .news-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; margin-bottom: 50px; }
+        .news-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 30px; 
+            margin-bottom: 50px; 
+        }
         .news-card { 
             background: var(--card-bg); 
             border-radius: 15px; 
             overflow: hidden; 
             border: 1px solid #333; 
-            transition: 0.3s; 
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
             backdrop-filter: blur(10px); 
             cursor: pointer; 
             position: relative;
+            animation: cardFloat 6s ease-in-out infinite;
         }
-        .news-card:hover { border-color: var(--gold); transform: translateY(-8px); }
+        .news-card:nth-child(2n) { animation-delay: 0.5s; }
+        .news-card:nth-child(3n) { animation-delay: 1s; }
+        .news-card:nth-child(5n) { animation-delay: 0.3s; }
+        .news-card:nth-child(7n) { animation-delay: 0.8s; }
+
+        .news-card:hover { 
+            border-color: var(--gold); 
+            transform: translateY(-12px) scale(1.02); 
+            box-shadow: 0 15px 50px rgba(212, 175, 55, 0.2);
+        }
         
         .card-badge {
             position: absolute; top: 15px; right: 15px;
@@ -105,18 +398,110 @@
             color: var(--gold);
             padding: 5px 12px; border-radius: 20px; font-size: 10px; font-weight: 900;
             border: 1px solid var(--gold); text-transform: uppercase; z-index: 10;
+            animation: badgePulse 3s ease-in-out infinite;
+            backdrop-filter: blur(5px);
         }
 
-        .img-container { width: 100%; height: 230px; background: #1a1a1a; overflow: hidden; }
-        .img-container img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
-        .news-card:hover .img-container img { transform: scale(1.1); }
+        @keyframes badgePulse {
+            0%, 100% { border-color: var(--gold); box-shadow: 0 0 5px rgba(212, 175, 55, 0.2); }
+            50% { border-color: #ffcc33; box-shadow: 0 0 20px rgba(212, 175, 55, 0.4); }
+        }
 
-        .news-info { padding: 25px; }
-        .news-info h3 { font-size: 20px; margin-bottom: 12px; color: var(--gold); line-height: 1.3; }
-        .news-info p { font-size: 14px; color: #ccc; line-height: 1.6; }
+        /* Slideshow */
+        .img-container { 
+            width: 100%; 
+            height: 200px; 
+            background: #1a1a1a; 
+            overflow: hidden; 
+            position: relative; 
+        }
+        .slide-img {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 1.2s ease-in-out;
+        }
+        .slide-img.active { opacity: 1; }
+        .slideshow-indicators {
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 20;
+        }
+        .slideshow-indicators span {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.4);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .slideshow-indicators span:hover { transform: scale(1.3); }
+        .slideshow-indicators span.active-dot {
+            background: var(--gold);
+            box-shadow: 0 0 12px var(--gold);
+            animation: dotGlow 1.5s ease-in-out infinite;
+        }
 
-        /* --- Modal Styles FIXED & HIGHLIGHTED --- */
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); display: none; justify-content: center; align-items: center; z-index: 3000; }
+        @keyframes dotGlow {
+            0%, 100% { box-shadow: 0 0 8px var(--gold); }
+            50% { box-shadow: 0 0 25px var(--gold), 0 0 40px rgba(212, 175, 55, 0.3); }
+        }
+
+        .news-info { padding: 20px; }
+        .news-info h3 { font-size: 18px; margin-bottom: 10px; color: var(--gold); line-height: 1.3; transition: color 0.3s; }
+        .news-card:hover .news-info h3 { color: #ffcc33; }
+        .news-info p { font-size: 13px; color: #ccc; line-height: 1.6; }
+
+        /* --- Bottom Live News Ticker --- */
+        .bottom-news-wrap {
+            background: rgba(8, 8, 8, 0.98);
+            padding: 15px 0;
+            border-top: 2px solid var(--gold);
+            border-bottom: 2px solid var(--gold);
+            overflow: hidden;
+            width: 100%;
+            position: relative;
+            margin-top: 40px;
+            animation: bottomBorder 4s ease-in-out infinite;
+        }
+
+        @keyframes bottomBorder {
+            0%, 100% { border-top-color: var(--gold); border-bottom-color: var(--gold); }
+            50% { border-top-color: #ffcc33; border-bottom-color: #ffcc33; box-shadow: 0 0 30px rgba(212, 175, 55, 0.05); }
+        }
+
+        .bottom-news-track {
+            display: flex;
+            white-space: nowrap;
+            animation: scrollNews 25s linear infinite;
+        }
+        .bottom-news-item {
+            padding: 0 50px;
+            font-size: 15px;
+            font-weight: 500;
+            color: #ddd;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .bottom-news-item:hover { color: var(--gold); transform: scale(1.02); }
+        .bottom-news-item .highlight { color: var(--gold); font-weight: 700; transition: color 0.3s; }
+        .bottom-news-item:hover .highlight { color: #ffcc33; }
+        .bottom-news-item .hot { color: #ff6b6b; font-weight: 700; animation: pulse 1.5s ease-in-out infinite; }
+        @keyframes scrollNews { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        /* --- Modal Styles --- */
+        .overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.95); display: none; 
+            justify-content: center; align-items: center; z-index: 3000;
+            backdrop-filter: blur(10px);
+        }
         .modal { 
             background: #111; 
             padding: 40px; 
@@ -125,7 +510,13 @@
             border-radius: 20px; 
             border: 2px solid var(--gold); 
             position: relative; 
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+            box-shadow: 0 0 40px rgba(212, 175, 55, 0.2);
+            animation: modalIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes modalIn {
+            from { transform: scale(0.8) translateY(30px); opacity: 0; }
+            to { transform: scale(1) translateY(0); opacity: 1; }
         }
         
         .modal h2 { 
@@ -138,9 +529,15 @@
             background: rgba(212, 175, 55, 0.1);
             padding: 10px;
             border-radius: 8px;
+            animation: titleGlow 4s ease-in-out infinite;
         }
 
-        .close { position: absolute; top: 15px; right: 20px; color: #fff; cursor: pointer; font-size: 24px; }
+        .close { 
+            position: absolute; top: 15px; right: 20px; 
+            color: #fff; cursor: pointer; font-size: 24px; 
+            transition: all 0.3s;
+        }
+        .close:hover { transform: rotate(90deg) scale(1.2); color: var(--gold); }
         
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; color: var(--gold); font-size: 12px; font-weight: 700; margin-bottom: 8px; text-transform: uppercase; }
@@ -154,14 +551,55 @@
             border-radius: 8px; 
             outline: none; 
             font-size: 16px;
+            transition: all 0.3s;
         }
-        
-        /* Highlight input focus */
-        #sheet-form input:focus { border-color: var(--gold); }
+        #sheet-form input:focus { 
+            border-color: var(--gold); 
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.1);
+            transform: scale(1.01);
+        }
 
-        /* Fix Phone Input alignment */
-        .iti { width: 100% !important; }
-        .iti__country-list { background-color: #111; color: #fff; border: 1px solid var(--gold); }
+        .phone-wrapper {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .phone-wrapper .iti {
+            flex: 1;
+            width: auto !important;
+        }
+        .phone-wrapper .iti input {
+            width: 100% !important;
+            padding: 12px !important;
+            background: #000 !important;
+            border: 1px solid #333 !important;
+            color: #fff !important;
+            border-radius: 8px !important;
+            outline: none;
+            font-size: 16px;
+            height: 48px !important;
+        }
+        .phone-wrapper .iti input:focus { border-color: var(--gold) !important; }
+        .phone-wrapper .iti__country-container { order: 0; margin-right: 0; }
+        .phone-wrapper .iti__selected-country {
+            background: #000 !important;
+            border: 1px solid #333 !important;
+            border-radius: 8px !important;
+            padding: 8px 12px !important;
+            height: 48px !important;
+            margin-right: 6px;
+        }
+        .phone-wrapper .iti__selected-country:hover { background: #1a1a1a !important; }
+        .phone-wrapper .iti__country-list {
+            background-color: #111 !important;
+            color: #fff !important;
+            border: 1px solid var(--gold) !important;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .phone-wrapper .iti__country { color: #fff !important; }
+        .phone-wrapper .iti__country:hover { background: #222 !important; }
+        .phone-wrapper .iti__selected-dial-code { display: none; }
 
         .submit-btn-container { text-align: center; margin-top: 25px; }
         
@@ -175,31 +613,183 @@
             font-size: 16px;
             cursor: pointer; 
             text-transform: uppercase; 
-            transition: 0.3s;
+            transition: all 0.3s;
             box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+            animation: btnPulse 2.5s ease-in-out infinite;
+            position: relative;
+            overflow: hidden;
         }
-        
-        .submit-btn:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(212, 175, 55, 0.6); }
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 60%);
+            animation: btnShine 3s ease-in-out infinite;
+        }
+        .submit-btn:hover { 
+            transform: scale(1.05) translateY(-3px); 
+            box-shadow: 0 8px 35px rgba(212, 175, 55, 0.6);
+        }
+
+        @keyframes btnPulse {
+            0%, 100% { box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4); }
+            50% { box-shadow: 0 4px 40px rgba(212, 175, 55, 0.7); }
+        }
 
         /* --- Article View --- */
-        .back-btn { color: var(--gold); cursor: pointer; margin-bottom: 30px; font-weight: 700; font-size: 14px; display: inline-block; }
-        .full-content { max-width: 900px; margin: 0 auto; animation: fadeIn 0.5s ease; }
-        .hero-img { width: 100%; height: 400px; border-radius: 20px; object-fit: cover; margin-bottom: 30px; border: 1px solid #333; }
+        .back-btn { 
+            color: var(--gold); 
+            cursor: pointer; 
+            margin-bottom: 30px; 
+            font-weight: 700; 
+            font-size: 14px; 
+            display: inline-block; 
+            transition: all 0.3s;
+        }
+        .back-btn:hover { color: #ffcc33; transform: translateX(-8px); }
+        .full-content { max-width: 900px; margin: 0 auto; animation: fadeIn 0.6s ease; }
+        .hero-img { 
+            width: 100%; height: 400px; border-radius: 20px; 
+            object-fit: cover; margin-bottom: 30px; 
+            border: 1px solid #333; 
+            animation: imgGlow 4s ease-in-out infinite;
+            transition: transform 0.5s;
+        }
+        .hero-img:hover { transform: scale(1.01); }
+
+        @keyframes imgGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(212, 175, 55, 0.1); }
+            50% { box-shadow: 0 0 40px rgba(212, 175, 55, 0.2); }
+        }
         
         /* --- Coin View --- */
-        .coin-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 40px; background: #111; padding: 30px; border-radius: 15px; border-left: 5px solid var(--gold); }
-        .coin-price-large { font-size: 50px; font-weight: 900; }
+        .coin-header { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            margin-bottom: 40px; 
+            background: #111; 
+            padding: 30px; 
+            border-radius: 15px; 
+            border-left: 5px solid var(--gold); 
+            animation: fadeInUp 0.6s ease;
+            transition: border-color 0.5s;
+        }
+        .coin-header:hover { border-left-color: #ffcc33; }
+        .coin-price-large { 
+            font-size: 50px; 
+            font-weight: 900; 
+            animation: priceGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes priceGlow {
+            0%, 100% { text-shadow: 0 0 10px rgba(212, 175, 55, 0.1); }
+            50% { text-shadow: 0 0 40px rgba(212, 175, 55, 0.2); }
+        }
+
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
-        .stat-box { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 10px; border: 1px solid #222; }
+        .stat-box { 
+            background: rgba(255,255,255,0.05); 
+            padding: 20px; 
+            border-radius: 10px; 
+            border: 1px solid #222; 
+            transition: all 0.4s;
+            animation: statFloat 5s ease-in-out infinite;
+        }
+        .stat-box:nth-child(2) { animation-delay: 0.5s; }
+        .stat-box:nth-child(3) { animation-delay: 1s; }
+        .stat-box:nth-child(4) { animation-delay: 1.5s; }
+
+        @keyframes statFloat {
+            0%, 100% { transform: translateY(0); border-color: #222; }
+            50% { transform: translateY(-6px); border-color: var(--gold); box-shadow: 0 5px 20px rgba(212, 175, 55, 0.1); }
+        }
+
+        .stat-box label { display: block; color: var(--gold); font-size: 12px; text-transform: uppercase; margin-bottom: 8px; }
+        .stat-box span { font-size: 22px; font-weight: 700; color: #fff; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        footer { background: rgba(0, 0, 0, 0.98); border-top: 1px solid #222; padding: 60px 6% 30px; text-align: center; }
+        footer { 
+            background: rgba(0, 0, 0, 0.98); 
+            border-top: 1px solid #222; 
+            padding: 60px 6% 30px; 
+            text-align: center; 
+            animation: footerPulse 4s ease-in-out infinite;
+            position: relative;
+            z-index: 1;
+        }
+        @keyframes footerPulse {
+            0%, 100% { border-top-color: #222; }
+            50% { border-top-color: var(--gold); }
+        }
+
+        footer .logo {
+            display: inline-block;
+            font-size: 26px;
+            font-weight: 900;
+            text-transform: uppercase;
+            color: var(--white);
+            animation: logoGlow 4s ease-in-out infinite;
+        }
+        footer .logo span { color: var(--gold); }
         
-        @media (max-width: 800px) { main, .view-container { padding-top: 170px; } }
+        @media (max-width: 800px) { 
+            main, .view-container { padding-top: 170px; }
+            .chart-grid { grid-template-columns: 1fr; }
+            .trader-overlay { bottom: 15px; right: 15px; }
+            .trader-container { width: 90px; height: 120px; }
+            .trader-emoji { font-size: 50px; }
+            .trader-speech { font-size: 10px; padding: 8px 12px; max-width: 100px; }
+        }
+
+        .live-news-source {
+            font-size: 11px;
+            color: var(--gray);
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .live-news-source .source-dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background: #00ff88;
+            border-radius: 50%;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
     </style>
 </head>
 <body>
+
+    <!-- Floating Particles -->
+    <div class="particle-container">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <!-- TRADER CHARACTER - ALWAYS VISIBLE & CLICKABLE -->
+    <div class="trader-overlay" id="traderOverlay">
+        <div class="trader-container" id="traderContainer">
+            <div class="trader-emoji" id="traderEmoji">🧑‍💻</div>
+            <div class="trader-speech" id="traderSpeech">
+                📊 Ready to trade?
+                <span>Click me to subscribe!</span>
+            </div>
+        </div>
+    </div>
 
     <header>
         <div class="logo" onclick="showView('home-view')">CRYPTO<span> LIVE</span></div>
@@ -216,11 +806,52 @@
     <main id="home-view" class="view-container">
         <section class="section-header">
             <span class="live-tag">● LIVE UPDATES</span>
-            <h1>Market Intelligence</h1>
+            <h1>Market Today</h1>
+            <p style="color: var(--gray); font-size: 14px; margin-top: 5px;"><span style="color: var(--gold); font-weight: 700;"></span></p>
         </section>
 
+        <!-- LIVE CHARTS SECTION -->
+        <div class="chart-grid" id="chart-grid">
+            <div class="chart-card">
+                <div class="chart-title">
+                    <span>Bitcoin / USD</span>
+                    <span class="chart-price" id="btc-price">$---</span>
+                </div>
+                <div class="chart-container" id="tv-chart-btc"></div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-title">
+                    <span>Ethereum / USD</span>
+                    <span class="chart-price" id="eth-price">$---</span>
+                </div>
+                <div class="chart-container" id="tv-chart-eth"></div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-title">
+                    <span>Solana / USD</span>
+                    <span class="chart-price" id="sol-price">$---</span>
+                </div>
+                <div class="chart-container" id="tv-chart-sol"></div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-title">
+                    <span>BNB / USD</span>
+                    <span class="chart-price" id="bnb-price">$---</span>
+                </div>
+                <div class="chart-container" id="tv-chart-bnb"></div>
+            </div>
+        </div>
+
+        <!-- NEWS GRID -->
         <div class="news-grid" id="intelligence-grid">
-            <!-- JS Inject Cards -->
+            <!-- JS will inject live news -->
+        </div>
+
+        <!-- Bottom Live News Ticker -->
+        <div class="bottom-news-wrap">
+            <div class="bottom-news-track" id="bottom-news-track">
+                <!-- Live news injected by JS -->
+            </div>
         </div>
     </main>
 
@@ -231,6 +862,10 @@
             <img id="art-img" class="hero-img" src="">
             <h2 id="art-title" style="font-size: 32px; color: var(--gold); margin-bottom: 20px;"></h2>
             <div id="art-text" style="font-size: 18px; color: #ccc; line-height: 1.8;"></div>
+            <div class="live-news-source">
+                <span class="source-dot"></span>
+                <span>Live feed from MoneyControl</span>
+            </div>
         </div>
     </div>
 
@@ -255,18 +890,21 @@
         </div>
     </div>
     
-        <!-- MODAL -->
+    <!-- MODAL -->
     <div class="overlay" id="overlay">
         <div class="modal">
             <span class="close" onclick="closeModal()">&times;</span>
-            
-            <!-- WRAPPER START -->
             <div id="form-content">
                 <h2>Subscribe Now</h2>
                 <form id="sheet-form">
                     <div class="form-group"><label>Full Name</label><input type="text" name="Name" required></div>
                     <div class="form-group"><label>Age</label><input type="number" name="Age" required></div>
-                    <div class="form-group"><label>Phone Number</label><input type="tel" id="phone" name="Phone" required></div>
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <div class="phone-wrapper">
+                            <input type="tel" id="phone" name="Phone" required>
+                        </div>
+                    </div>
                     <div class="form-group"><label>Email Address</label><input type="email" name="Email" required></div>
                     <div class="form-group"><label>Trading Experience</label>
                         <select name="Experience" required>
@@ -278,66 +916,346 @@
                     <div class="submit-btn-container"><button type="submit" class="submit-btn" id="submit-text">Subscribe</button></div>
                 </form>
             </div>
-            <!-- WRAPPER END -->
-
             <div id="success-msg" class="hidden" style="text-align:center; color:var(-bullish); margin: 40px 0; font-weight:900; font-size: 32px; text-transform: Sentence;">Thank You For Subscribing</div>
         </div>
     </div>
     
     <footer>
         <div class="logo">CRYPTO<span> LIVE</span></div>
-        <p>&copy; 2026 Crypto Live Terminal.</p>
+        <p>&copy; 2026 Crypto Live Terminal</p>
     </footer>
 
     <script>
-        // --- 9 TOPICS DATA ---
-        const intelligenceData = [
-            { id: 1, badge: 'BREAKING', title: 'Bitcoin ETFs Surge: BlackRock IBIT Hits $20B', img: 'https://6a554e0f35c84f09d234257c.imgix.net/ChatGPT%20Image%20Jul%2014,%202026,%2002_32_36%20AM.png', text: 'Institutional adoption is accelerating at an unprecedented pace as spot Bitcoin ETFs from major asset managers like BlackRock and Fidelity continue attracting billions in fresh capital. These sustained inflows are steadily absorbing available Bitcoin from the open market, reducing exchange reserves and tightening overall liquidity. As more institutions allocate Bitcoin to long-term investment portfolios, the circulating supply available for trading continues to shrink. Many analysts believe this growing supply-demand imbalance could amplify price volatility and support higher valuations if demand remains strong. With traditional finance increasingly embracing digital assets, Bitcoin is solidifying its position as a mainstream institutional investment and a strategic store of value in the global financial system.' },
-            { id: 2, badge: 'NETWORK', title: 'Solana Ecosystem TVL Hits 2-Year High', img: 'https://images.unsplash.com/photo-1639322537228-f710d846310a?auto=format&fit=crop&w=800&q=80', text: ' Solanas DeFi ecosystem is experiencing remarkable growth as decentralized exchanges (DEXs) continue to attract strong trading activity from users around the world. Fast transaction speeds, low network fees, and an expanding ecosystem of DeFi applications have made Solana an increasingly popular destination for traders, liquidity providers, and developers alike. New protocols and token launches are contributing to higher on-chain activity, while rising user participation is helping push DEX volumes to new milestones. As capital flows into the ecosystem and innovation accelerates, Solana is strengthening its position as one of the leading blockchain networks for decentralized finance. If this momentum continues, many market participants expect Solana to remain a major hub for DeFi growth and on-chain trading in the months ahead.' },
-            { id: 3, badge: 'SECURITY', title: 'Security Alert: New Hardware Wallet Malware', img: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=800&q=80', text: 'Forensic researchers have identified a sophisticated new strain of malware designed to silently replace cryptocurrency wallet addresses during copy-and-paste operations. Once a victim copies a wallet address, the malware automatically swaps it with an attacker-controlled address, making the change difficult to notice before a transaction is confirmed. Because blockchain transactions are irreversible, even a single mistake can result in the permanent loss of funds. Security experts are urging users to carefully verify the first and last several characters of every wallet address before sending crypto, enable hardware wallets where possible, and keep antivirus software and operating systems up to date. As digital asset adoption continues to grow, this discovery highlights the increasing sophistication of cybercriminals and the importance of strong security practices when managing cryptocurrency holdings.' },
-            { id: 4, badge: 'LEGAL', title: 'XRP Legal Victory: SEC Appeal Deadlines Pass', img: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=800&q=80', text: 'The long-running legal dispute between Ripple and the U.S. Securities and Exchange Commission (SEC) has reached a significant milestone, bringing greater regulatory clarity to the cryptocurrency market. After years of uncertainty, the latest developments have been widely interpreted by market participants as a positive step for Ripple and the broader digital asset industry. Investors are closely monitoring the implications for XRP, with improved legal certainty boosting confidence and fueling renewed market optimism. Analysts believe that clearer regulatory guidance could encourage greater institutional participation, expand partnerships, and support broader adoption of blockchain-based payment solutions. While the regulatory landscape for digital assets continues to evolve, many see this case as a landmark moment that may influence how cryptocurrencies are regulated and classified in the United States for years to come.' },
-            { id: 5, badge: 'AI', title: 'NVIDIA Surge Propels AI Tokens to New Heights', img: 'https://images.unsplash.com/photo-1675271591211-126ad94e495d?auto=format&fit=crop&w=800&q=80', text: 'NVIDIAs continued surge is driving renewed optimism across the AI cryptocurrency sector, as growing demand for advanced AI chips and expanding investments in artificial intelligence fuel interest in blockchain-based AI projects. Tokens linked to decentralized computing, GPU networks, machine learning, and AI infrastructure have seen increased attention from investors who view the convergence of AI and blockchain as a major long-term growth opportunity. While the sector remains highly volatile, the strong performance of AI leaders like NVIDIA has reinforced confidence that AI-focused cryptocurrencies could benefit from accelerating enterprise adoption, technological innovation, and rising demand for decentralized AI solutions.' },
-            { id: 6, badge: 'POLICY', title: 'MiCA Regulations Go Live in Europe', img: 'https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&w=800&q=80', text: 'The European Unions Markets in Crypto-Assets (MiCA) framework is now officially in effect, establishing the first comprehensive and unified regulatory framework for cryptocurrencies across all 27 EU member states. The new rules are designed to provide greater legal certainty for crypto exchanges, stablecoin issuers, wallet providers, and other digital asset businesses while strengthening consumer protection, market integrity, and financial stability. By creating a single licensing regime, MiCA enables compliant crypto firms to operate more easily across the EU without navigating different national regulations. Industry participants view the framework as a major milestone for digital asset adoption, as it encourages innovation while setting clear compliance standards that could attract institutional investment and serve as a model for crypto regulation in other regions around the world.' },
-            { id: 7, badge: 'WHALES', title: '$500M in BTC Moved to Cold Storage', img: 'https://images.unsplash.com/photo-1518546305927-5a555bb7020d?auto=format&fit=crop&w=800&q=80', text: 'Large cryptocurrency whale wallets are increasingly moving significant amounts of digital assets away from centralized exchanges into private wallets, a trend that many market observers interpret as a sign of long-term holding confidence rather than an immediate intent to sell. Reduced exchange balances can indicate that investors are choosing self-custody and positioning for future price appreciation instead of short-term trading. While on-chain wallet movements alone do not guarantee future market direction, sustained accumulation by large holders is often viewed as a positive indicator of institutional and high-net-worth investor sentiment. As supply available on exchanges declines and demand remains resilient, many analysts believe these accumulation trends could contribute to tighter market conditions and support Bitcoins long-term investment narrative.' },
-            { id: 8, badge: 'ETHEREUM', title: 'Ethereum Pectra Upgrade: UX Milestone', img: 'https://6a554e0f35c84f09d234257c.imgix.net/ChatGPT%20Image%20Jul%2014,%202026,%2002_27_01%20AM.png', text: 'Development of Ethereums next hard fork is centered on enhancing the overall user experience while strengthening the networks staking infrastructure. Proposed upgrades aim to make crypto wallets more intuitive through features such as improved account management, streamlined transaction flows, and greater support for smart accounts, reducing friction for both new and experienced users. On the staking side, developers are exploring improvements that could increase validator efficiency, optimize network performance, and simplify operational requirements without compromising security or decentralization. As Ethereum continues to evolve, these enhancements are expected to improve usability, encourage broader adoption, and reinforce the networks position as the leading platform for decentralized applications and smart contracts.' },
-            { id: 9, badge: 'STABLECOINS', title: 'USDT Market Cap Crosses $120B Mark', img: 'https://6a554e0f35c84f09d234257c.imgix.net/sandbox/ChatGPT Image Jul 14, 2026, 02_07_34 AM.png', text: 'Stablecoins are becoming an increasingly important part of the global digital asset ecosystem as users seek reliable exposure to the U.S. dollar amid inflation, currency depreciation, and economic uncertainty in various regions. By leveraging blockchain networks, stablecoins enable fast, low-cost, and borderless transactions without relying on traditional banking infrastructure, making them attractive for payments, remittances, trading, and savings. Their growing adoption across decentralized finance (DeFi), cross-border commerce, and institutional settlements highlights the expanding role of tokenized dollars in the global economy. As regulatory frameworks mature and demand for digital dollar access continues to rise, many analysts expect stablecoins to remain a key driver of blockchain adoption and the broader evolution of decentralized financial services.' }
+        // --- TRADER CHARACTER CLICK HANDLER ---
+        document.getElementById('traderContainer').addEventListener('click', function(e) {
+            e.stopPropagation();
+            // Create ripple effect
+            const rect = this.getBoundingClientRect();
+            const ripple = document.createElement('div');
+            ripple.className = 'click-ripple';
+            ripple.style.left = (e.clientX - rect.left) + 'px';
+            ripple.style.top = (e.clientY - rect.top) + 'px';
+            this.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 800);
             
+            // Change trader reaction
+            const emoji = document.getElementById('traderEmoji');
+            const speech = document.getElementById('traderSpeech');
+            emoji.textContent = '🤩';
+            speech.innerHTML = '🎯 Let\'s go!<span>Subscribing now...</span>';
+            
+            setTimeout(() => {
+                emoji.textContent = '🧑‍💻';
+                speech.innerHTML = '📊 More details<span>Click me to subscribe!</span>';
+            }, 2000);
+            
+            // Open modal
+            setTimeout(() => {
+                openModal();
+            }, 300);
+        });
+
+        // --- MONEYCONTROL NEWS DATA ---
+        const moneyControlNews = [
+            { id: 1, badge: 'BREAKING', title: 'Sensex surges 500 points, Nifty above 24,800; IT stocks lead rally', img: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=800&q=80', text: 'Indian equity markets opened sharply higher today with the Sensex gaining over 500 points and Nifty crossing 24,800 levels. IT and banking stocks were the top gainers as global markets traded positively on hopes of interest rate cuts. The rally was led by heavyweights like Reliance, HDFC Bank, and TCS, with broader markets also participating in the uptrend.' },
+            { id: 2, badge: 'LIVE', title: 'Rupee strengthens to 83.15 against USD, bond yields decline', img: 'https://images.unsplash.com/photo-1580519542036-c47de6196ba5?auto=format&fit=crop&w=800&q=80', text: 'The Indian rupee appreciated by 15 paise to trade at 83.15 against the US dollar in early trade, supported by a weak greenback and sustained foreign capital inflows. Meanwhile, bond yields declined as investors expect the RBI to maintain a dovish stance amid easing inflation. The 10-year benchmark yield fell to 6.88%, its lowest level in three months.' },
+            { id: 3, badge: 'MARKETS', title: 'Gold prices near all-time high, silver jumps 3% on safe-haven demand', img: 'https://images.unsplash.com/photo-1610375461246-83df859d849d?auto=format&fit=crop&w=800&q=80', text: 'Precious metals surged today as investors sought safe-haven assets amid geopolitical tensions and uncertainty over global interest rates. Gold prices climbed to $2,450 per ounce, just 1% below its all-time high, while silver jumped 3% to breach $32 per ounce. Analysts attribute the rally to strong physical demand from central banks and retail investors.' },
+            { id: 4, badge: 'CRYPTO', title: 'Bitcoin tests $72,000, Ethereum rallies 8% on ETF inflows', img: 'https://images.unsplash.com/photo-1518546305927-5a555bb7020d?auto=format&fit=crop&w=800&q=80', text: 'Cryptocurrency markets extended their rally with Bitcoin testing the $72,000 level and Ethereum surging 8% as institutional inflows into crypto ETFs continued. Data shows that spot Bitcoin ETFs recorded their largest daily inflows in three weeks, with BlackRock\'s IBIT leading the pack. The crypto market capitalization has now surpassed $2.8 trillion.' },
+            { id: 5, badge: 'ECONOMY', title: 'India\'s GDP growth beats estimates at 7.8% in Q1, manufacturing shines', img: 'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=800&q=80', text: 'India\'s economy grew at a robust 7.8% in the first quarter of fiscal 2025, surpassing market expectations of 7.5%. Manufacturing sector recorded double-digit growth of 12.5%, while construction and services also showed strong performance. The data reinforces India\'s position as the fastest-growing major economy, boosting investor sentiment across markets.' },
+            { id: 6, badge: 'TECH', title: 'AI revolution: Nvidia surpasses Apple in market cap, hits $3.2 trillion', img: 'https://images.unsplash.com/photo-1675271591211-126ad94e495d?auto=format&fit=crop&w=800&q=80', text: 'Nvidia has overtaken Apple to become the world\'s second-most valuable company with a market capitalization of $3.2 trillion, driven by insatiable demand for its AI chips. The stock has surged 150% this year alone, fueled by strong earnings and growing adoption of AI technologies across industries. The development has also boosted AI-related crypto tokens.' },
+            { id: 7, badge: 'OIL', title: 'Brent crude hovers near $85/barrel, OPEC+ maintains output cuts', img: 'https://images.unsplash.com/photo-1579762715118-a6f1d4b934f1?auto=format&fit=crop&w=800&q=80', text: 'Oil prices remained steady with Brent crude trading near $85 per barrel as OPEC+ confirmed it will maintain its current output cuts. The decision is aimed at stabilizing prices amid concerns over global demand and rising US production. However, geopolitical tensions in the Middle East continue to provide support to oil prices.' },
+            { id: 8, badge: 'FED', title: 'Fed signals rate cut in September, US dollar weakens', img: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=800&q=80', text: 'Federal Reserve officials have signaled a possible interest rate cut as early as September, following softer-than-expected inflation data. The dovish stance has weakened the US dollar index to 103.5, its lowest level in three months. The development has boosted emerging market currencies and commodities, with gold and silver leading gains.' },
+            { id: 9, badge: 'RETAIL', title: 'Amazon, Flipkart mega sales: E-commerce sees 45% surge in orders', img: 'https://images.unsplash.com/photo-1534452203293-494d7ddbf7e0?auto=format&fit=crop&w=800&q=80', text: 'India\'s e-commerce sector witnessed a 45% surge in orders during the ongoing festive sales, driven by consumer demand for electronics, fashion, and home products. Amazon and Flipkart reported record-breaking sales in the first 48 hours, with tier-2 cities contributing significantly to the growth. The momentum is expected to continue throughout the festive season.' },
+            { id: 10, badge: 'ENERGY', title: 'Solar energy stocks rally on new PLI scheme, government targets 500 GW by 2030', img: 'https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?auto=format&fit=crop&w=800&q=80', text: 'Solar energy stocks rallied sharply today after the government announced a new Production Linked Incentive (PLI) scheme for solar manufacturing. The initiative aims to achieve 500 GW of renewable energy capacity by 2030, with a focus on domestic manufacturing. Leading solar companies like Adani Green, Tata Power, and Suzlon saw significant gains.' },
+            { id: 11, badge: 'BANKING', title: 'RBI keeps repo rate unchanged at 6.5%, maintains accommodative stance', img: 'https://images.unsplash.com/photo-1580519542036-c47de6196ba5?auto=format&fit=crop&w=800&q=80', text: 'The Reserve Bank of India (RBI) kept the benchmark repo rate unchanged at 6.5% for the seventh consecutive meeting, in line with market expectations. The central bank maintained its accommodative stance, citing moderation in core inflation and the need to support economic growth. The decision was welcomed by markets, with banking stocks rallying.' },
+            { id: 12, badge: 'AUTO', title: 'Auto sales surge 22% in July, SUVs and electric vehicles lead growth', img: 'https://images.unsplash.com/photo-1534452203293-494d7ddbf7e0?auto=format&fit=crop&w=800&q=80', text: 'Indian automobile sales witnessed a robust 22% year-on-year growth in July 2025, driven by strong demand for SUVs and electric vehicles. Market leaders Maruti Suzuki, Hyundai, and Tata Motors reported double-digit growth, while EV sales more than doubled compared to last year. The industry expects the momentum to continue in the festive season.' },
+            { id: 13, badge: 'PHARMA', title: 'Pharma stocks rally on US FDA approvals, generic drug exports surge', img: 'https://images.unsplash.com/photo-1580519542036-c47de6196ba5?auto=format&fit=crop&w=800&q=80', text: 'Indian pharmaceutical stocks rallied sharply today after multiple companies received US FDA approvals for generic drugs. Sun Pharma, Dr. Reddy\'s, and Lupin were among the top gainers. The approvals are expected to boost export revenues and strengthen India\'s position as the pharmacy of the world. The sector has shown resilience despite global headwinds.' },
+            { id: 14, badge: 'REALTY', title: 'Real estate sector sees 35% growth in housing sales, luxury segment booms', img: 'https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?auto=format&fit=crop&w=800&q=80', text: 'India\'s real estate sector witnessed a 35% growth in housing sales during the April-June quarter, with the luxury segment showing exceptional momentum. Cities like Mumbai, Delhi NCR, and Bengaluru led the recovery, driven by strong demand for premium properties and favorable interest rates. Developers are launching new projects to meet the growing demand.' },
+            { id: 15, badge: 'TELECOM', title: '5G subscriptions surpass 500 million in India, Jio leads market', img: 'https://images.unsplash.com/photo-1534452203293-494d7ddbf7e0?auto=format&fit=crop&w=800&q=80', text: 'India\'s 5G subscriber base has crossed 500 million, making it the fastest rollout of 5G technology globally. Reliance Jio leads the market with over 200 million 5G users, followed by Airtel and Vi. The rapid adoption of 5G is driving growth in digital services, IoT, and cloud computing, with telecom companies investing heavily in network expansion.' },
+            { id: 16, badge: 'STARTUP', title: 'Indian startup ecosystem raises $12B in H1 2025, fintech and AI lead', img: 'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=800&q=80', text: 'Indian startups raised $12 billion in the first half of 2025, with fintech and AI startups attracting the largest funding rounds. The total funding represents a 40% increase compared to the same period last year, signaling strong investor confidence in India\'s digital economy. Major deals included funding rounds for Flipkart, PhonePe, and several AI-powered startups.' },
+            { id: 17, badge: 'COMMODITY', title: 'Crude palm oil prices surge 12% on supply concerns, edible oil stocks rally', img: 'https://images.unsplash.com/photo-1579762715118-a6f1d4b934f1?auto=format&fit=crop&w=800&q=80', text: 'Crude palm oil prices surged 12% this week, driven by supply concerns in Indonesia and Malaysia, the world\'s largest producers. The price increase has led to a rally in edible oil stocks, with Adani Wilmar and Patanjali Foods among the gainers. The government is monitoring the situation closely and may consider duty adjustments to stabilize domestic prices.' },
+            { id: 18, badge: 'INFRA', title: 'Infrastructure spending hits record $200B, construction stocks soar', img: 'https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?auto=format&fit=crop&w=800&q=80', text: 'India\'s infrastructure spending has touched a record $200 billion in the current fiscal year, driven by government initiatives and private sector participation. The spending has led to a surge in construction stocks, with L&T, HCC, and IRB Infrastructure leading the gains. The government plans to invest an additional $100 billion in the next two years.' }
         ];
+
+        const liveNewsItems = [
+            { id: 1, text: '🔴 LIVE: Sensex up 500 points, Nifty above 24,800', hot: true },
+            { id: 2, text: '📊 Rupee at 83.15 vs USD, bond yields decline', hot: false },
+            { id: 3, text: '💰 Bitcoin testing $72,000, Ethereum up 8%', hot: true },
+            { id: 4, text: '📈 Nvidia surpasses Apple in market cap at $3.2T', hot: false },
+            { id: 5, text: '🛢️ Brent crude at $85/barrel, OPEC+ maintains cuts', hot: false },
+            { id: 6, text: '🏦 Fed signals rate cut in September, dollar weakens', hot: true },
+            { id: 7, text: '🛒 E-commerce sales surge 45% in festive season', hot: false },
+            { id: 8, text: '☀️ Solar stocks rally on new PLI scheme', hot: false },
+            { id: 9, text: '🏦 RBI keeps repo rate unchanged at 6.5%', hot: true },
+            { id: 10, text: '🚗 Auto sales surge 22% in July, SUVs lead', hot: false },
+            { id: 11, text: '💊 Pharma stocks rally on US FDA approvals', hot: false },
+            { id: 12, text: '🏢 Real estate sales grow 35%, luxury booms', hot: false },
+            { id: 13, text: '📱 5G subscriptions surpass 500M in India', hot: true },
+            { id: 14, text: '🚀 Indian startups raise $12B in H1 2025', hot: false },
+            { id: 15, text: '🌴 Crude palm oil prices surge 12% on supply concerns', hot: false }
+        ];
+
+        const fallbackNews = [...moneyControlNews];
+
         let marketData = [];
-        let phoneInput;
+        let phoneInput = null;
+        let slideIntervals = [];
+        let tickerInterval;
+        let newsUpdateInterval;
 
         window.onload = () => {
-            renderIntelligence();
+            renderNews();
             fetchPrices();
-            setInterval(fetchPrices, 15000);
+            tickerInterval = setInterval(fetchPrices, 4000);
+            startAllSlideshows();
+            initBottomNews();
+            initCharts();
+            newsUpdateInterval = setInterval(updateNews, 30000);
 
-            // Initialize Phone Input
             const phoneElem = document.querySelector("#phone");
-            if(phoneElem) {
+            if (phoneElem) {
                 phoneInput = window.intlTelInput(phoneElem, {
                     utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
                     initialCountry: "auto",
                     geoIpLookup: callback => {
                         fetch('https://ipapi.co/json').then(res => res.json()).then(data => callback(data.country_code)).catch(() => callback('us'));
-                    }
+                    },
+                    separateDialCode: true,
+                    preferredCountries: ['us', 'gb', 'in', 'de', 'fr', 'jp']
                 });
             }
         };
 
-        function renderIntelligence() {
+        function updateNews() {
+            const newsGrid = document.getElementById('intelligence-grid');
+            const currentCards = newsGrid.querySelectorAll('.news-card');
+            
+            if (currentCards.length > 0) {
+                const shuffled = [...moneyControlNews].sort(() => Math.random() - 0.5);
+                const newItems = shuffled.slice(0, 9);
+                
+                currentCards.forEach((card, index) => {
+                    if (index < newItems.length) {
+                        const news = newItems[index];
+                        const badge = card.querySelector('.card-badge');
+                        if (badge) badge.textContent = news.badge;
+                        
+                        const title = card.querySelector('.news-info h3');
+                        if (title) title.textContent = news.title;
+                        
+                        const desc = card.querySelector('.news-info p');
+                        if (desc) desc.textContent = news.text.substring(0, 100) + '...';
+                        
+                        const container = card.querySelector('.img-container');
+                        if (container) {
+                            const slides = container.querySelectorAll('.slide-img');
+                            const dots = container.querySelectorAll('.slideshow-indicators span');
+                            
+                            const newImg = document.createElement('img');
+                            newImg.className = 'slide-img';
+                            newImg.src = news.img;
+                            newImg.alt = 'news';
+                            container.insertBefore(newImg, container.firstChild);
+                            
+                            const imgs = container.querySelectorAll('.slide-img');
+                            if (imgs.length > 5) {
+                                imgs[imgs.length - 1].remove();
+                            }
+                            
+                            const allSlides = container.querySelectorAll('.slide-img');
+                            allSlides.forEach(s => s.classList.remove('active'));
+                            if (allSlides.length > 0) {
+                                allSlides[0].classList.add('active');
+                            }
+                            
+                            const dotContainer = container.querySelector('.slideshow-indicators');
+                            if (dotContainer) {
+                                const newDot = document.createElement('span');
+                                newDot.className = 'active-dot';
+                                newDot.dataset.index = '0';
+                                dotContainer.appendChild(newDot);
+                                
+                                const allDots = dotContainer.querySelectorAll('span');
+                                if (allDots.length > 5) {
+                                    allDots[allDots.length - 1].remove();
+                                }
+                                allDots.forEach(d => d.classList.remove('active-dot'));
+                                if (allDots.length > 0) {
+                                    allDots[0].classList.add('active-dot');
+                                }
+                            }
+                        }
+                        
+                        const source = card.querySelector('.live-news-source span:last-child');
+                        if (source) {
+                            source.textContent = `MoneyControl • ${new Date().toLocaleTimeString()}`;
+                        }
+                    }
+                });
+            }
+            
+            updateBottomTicker();
+        }
+
+        function updateBottomTicker() {
+            const track = document.getElementById('bottom-news-track');
+            const shuffled = [...liveNewsItems].sort(() => Math.random() - 0.5);
+            const freshItems = shuffled.slice(0, 8);
+            const doubled = [...freshItems, ...freshItems];
+            track.innerHTML = doubled.map(news => 
+                `<div class="bottom-news-item" onclick="openArticle(${news.id})">
+                    ${news.hot ? '<span class="hot">🔴 LIVE</span>' : '📰'} 
+                    <span class="highlight">${news.text}</span>
+                    <span style="color: var(--gold); font-size: 12px; margin-left: 10px;">Click to read more →</span>
+                </div>`
+            ).join('');
+        }
+
+        function renderNews() {
             const grid = document.getElementById('intelligence-grid');
-            grid.innerHTML = intelligenceData.map(item => `
-                <div class="news-card" onclick="openArticle(${item.id})">
-                    <div class="card-badge">${item.badge}</div>
-                    <div class="img-container">
-                        <img src="${item.img}" onerror="this.src='https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=800&q=80'">
+            const allNews = moneyControlNews;
+            
+            const slideSets = [
+                ['https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1580519542036-c47de6196ba5?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1610375461246-83df859d849d?auto=format&fit=crop&w=800&q=80'],
+                ['https://images.unsplash.com/photo-1518546305927-5a555bb7020d?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1675271591211-126ad94e495d?auto=format&fit=crop&w=800&q=80'],
+                ['https://images.unsplash.com/photo-1579762715118-a6f1d4b934f1?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1534452203293-494d7ddbf7e0?auto=format&fit=crop&w=800&q=80'],
+                ['https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1580519542036-c47de6196ba5?auto=format&fit=crop&w=800&q=80'],
+                ['https://images.unsplash.com/photo-1610375461246-83df859d849d?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1518546305927-5a555bb7020d?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=800&q=80'],
+                ['https://images.unsplash.com/photo-1675271591211-126ad94e495d?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1579762715118-a6f1d4b934f1?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=800&q=80'],
+                ['https://images.unsplash.com/photo-1534452203293-494d7ddbf7e0?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=800&q=80'],
+                ['https://images.unsplash.com/photo-1580519542036-c47de6196ba5?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1610375461246-83df859d849d?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1518546305927-5a555bb7020d?auto=format&fit=crop&w=800&q=80'],
+                ['https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1675271591211-126ad94e495d?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1579762715118-a6f1d4b934f1?auto=format&fit=crop&w=800&q=80'],
+                ['https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1534452203293-494d7ddbf7e0?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?auto=format&fit=crop&w=800&q=80'],
+                ['https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1580519542036-c47de6196ba5?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1610375461246-83df859d849d?auto=format&fit=crop&w=800&q=80'],
+                ['https://images.unsplash.com/photo-1518546305927-5a555bb7020d?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1675271591211-126ad94e495d?auto=format&fit=crop&w=800&q=80'],
+                ['https://images.unsplash.com/photo-1579762715118-a6f1d4b934f1?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1534452203293-494d7ddbf7e0?auto=format&fit=crop&w=800&q=80'],
+                ['https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1580519542036-c47de6196ba5?auto=format&fit=crop&w=800&q=80'],
+                ['https://images.unsplash.com/photo-1610375461246-83df859d849d?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1518546305927-5a555bb7020d?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=800&q=80'],
+                ['https://images.unsplash.com/photo-1675271591211-126ad94e495d?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1579762715118-a6f1d4b934f1?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=800&q=80'],
+                ['https://images.unsplash.com/photo-1534452203293-494d7ddbf7e0?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=800&q=80'],
+                ['https://images.unsplash.com/photo-1580519542036-c47de6196ba5?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1610375461246-83df859d849d?auto=format&fit=crop&w=800&q=80', 'https://images.unsplash.com/photo-1518546305927-5a555bb7020d?auto=format&fit=crop&w=800&q=80']
+            ];
+
+            grid.innerHTML = allNews.map((item, index) => {
+                const slides = slideSets[index % slideSets.length];
+                return `
+                    <div class="news-card" onclick="openArticle(${item.id})">
+                        <div class="card-badge">${item.badge}</div>
+                        <div class="img-container" id="slideshow-${item.id}">
+                            ${slides.map((src, i) => 
+                                `<img class="slide-img ${i === 0 ? 'active' : ''}" src="${src}" alt="slide ${i}">`
+                            ).join('')}
+                            <div class="slideshow-indicators" id="indicators-${item.id}">
+                                ${slides.map((_, i) => 
+                                    `<span class="${i === 0 ? 'active-dot' : ''}" data-index="${i}"></span>`
+                                ).join('')}
+                            </div>
+                        </div>
+                        <div class="news-info">
+                            <h3>${item.title}</h3>
+                            <p>${item.text.substring(0, 100)}...</p>
+                            <div class="live-news-source">
+                                <span class="source-dot"></span>
+                                <span>MoneyControl • ${new Date().toLocaleTimeString()}</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="news-info">
-                        <h3>${item.title}</h3>
-                        <p>${item.text.substring(0, 100)}...</p>
-                    </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
+        }
+
+        function startAllSlideshows() {
+            slideIntervals.forEach(interval => clearInterval(interval));
+            slideIntervals = [];
+
+            const allContainers = document.querySelectorAll('.img-container');
+            allContainers.forEach(container => {
+                const slides = container.querySelectorAll('.slide-img');
+                const dots = container.querySelectorAll('.slideshow-indicators span');
+                if (slides.length === 0) return;
+
+                let currentSlide = 0;
+
+                dots.forEach((dot, idx) => {
+                    dot.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        clearInterval(interval);
+                        slides.forEach(s => s.classList.remove('active'));
+                        dots.forEach(d => d.classList.remove('active-dot'));
+                        currentSlide = idx;
+                        slides[idx].classList.add('active');
+                        dots[idx].classList.add('active-dot');
+                        interval = setInterval(() => {
+                            slides.forEach(s => s.classList.remove('active'));
+                            dots.forEach(d => d.classList.remove('active-dot'));
+                            currentSlide = (currentSlide + 1) % slides.length;
+                            slides[currentSlide].classList.add('active');
+                            dots[currentSlide].classList.add('active-dot');
+                        }, 2500);
+                        slideIntervals.push(interval);
+                    });
+                });
+
+                let interval = setInterval(() => {
+                    slides.forEach(s => s.classList.remove('active'));
+                    dots.forEach(d => d.classList.remove('active-dot'));
+                    currentSlide = (currentSlide + 1) % slides.length;
+                    slides[currentSlide].classList.add('active');
+                    dots[currentSlide].classList.add('active-dot');
+                }, 2500);
+                slideIntervals.push(interval);
+            });
+        }
+
+        function initCharts() {
+            const chartConfigs = [
+                { id: 'tv-chart-btc', symbol: 'BITSTAMP:BTCUSD', priceId: 'btc-price' },
+                { id: 'tv-chart-eth', symbol: 'BITSTAMP:ETHUSD', priceId: 'eth-price' },
+                { id: 'tv-chart-sol', symbol: 'BINANCE:SOLUSD', priceId: 'sol-price' },
+                { id: 'tv-chart-bnb', symbol: 'BINANCE:BNBUSD', priceId: 'bnb-price' }
+            ];
+
+            chartConfigs.forEach(config => {
+                try {
+                    new TradingView.widget({
+                        container_id: config.id,
+                        symbol: config.symbol,
+                        interval: '1',
+                        timezone: 'Etc/UTC',
+                        theme: 'dark',
+                        style: '1',
+                        locale: 'en',
+                        toolbar_bg: '#000000',
+                        enable_publishing: false,
+                        hide_side_toolbar: true,
+                        allow_symbol_change: false,
+                        studies: ['MASimple@tv-basicstudies'],
+                        studies_overrides: { 'MASimple.length': 20 },
+                        width: '100%',
+                        height: '100%',
+                        backgroundColor: '#0a0a0a',
+                        gridColor: '#1a1a1a',
+                        hide_top_toolbar: true,
+                        with: '100%',
+                        height: '100%',
+                        autosize: true
+                    });
+                } catch(e) {
+                    console.log('Chart init error for', config.symbol, e);
+                }
+            });
+        }
+
+        function initBottomNews() {
+            const track = document.getElementById('bottom-news-track');
+            const newsItems = [...liveNewsItems, ...liveNewsItems];
+            track.innerHTML = newsItems.map(news => 
+                `<div class="bottom-news-item" onclick="openArticle(${news.id})">
+                    ${news.hot ? '<span class="hot">🔴 LIVE</span>' : '📰'} 
+                    <span class="highlight">${news.text}</span>
+                    <span style="color: var(--gold); font-size: 12px; margin-left: 10px;">Click to read more →</span>
+                </div>`
+            ).join('');
         }
 
         function showView(viewId) {
@@ -347,7 +1265,8 @@
         }
 
         function openArticle(id) {
-            const art = intelligenceData.find(x => x.id === id);
+            const art = moneyControlNews.find(x => x.id === id) || fallbackNews.find(x => x.id === id);
+            if (!art) return;
             document.getElementById('art-img').src = art.img;
             document.getElementById('art-title').innerText = art.title;
             document.getElementById('art-text').innerText = art.text;
@@ -363,14 +1282,30 @@
                 marketData.forEach(coin => {
                     const price = parseFloat(coin.lastPrice).toLocaleString(undefined, { minimumFractionDigits: 2 });
                     const change = parseFloat(coin.priceChangePercent).toFixed(2);
-                    html += `<div class="ticker-item" onclick="openCoinDetail('${coin.symbol}')">${coin.symbol.replace('USDT','')}: <span class="${change >= 0 ? 'up' : 'down'}">${change >= 0 ? '▲' : '▼'} $${price}</span></div>`;
+                    const changeClass = change >= 0 ? 'up' : 'down';
+                    const arrow = change >= 0 ? '▲' : '▼';
+                    html += `<div class="ticker-item" onclick="openCoinDetail('${coin.symbol}')">
+                        <span style="color: var(--gold); font-weight: 900;">${coin.symbol.replace('USDT','')}</span>: 
+                        <span class="${changeClass}">${arrow} $${price}</span>
+                        <span style="color: #888; font-size: 12px;">(${change}%)</span>
+                    </div>`;
                 });
                 document.getElementById('ticker-track').innerHTML = html + html;
+
+                const btc = marketData.find(c => c.symbol === 'BTCUSDT');
+                const eth = marketData.find(c => c.symbol === 'ETHUSDT');
+                const sol = marketData.find(c => c.symbol === 'SOLUSDT');
+                const bnb = marketData.find(c => c.symbol === 'BNBUSDT');
+                if (btc) document.getElementById('btc-price').innerText = '$' + parseFloat(btc.lastPrice).toLocaleString();
+                if (eth) document.getElementById('eth-price').innerText = '$' + parseFloat(eth.lastPrice).toLocaleString();
+                if (sol) document.getElementById('sol-price').innerText = '$' + parseFloat(sol.lastPrice).toLocaleString();
+                if (bnb) document.getElementById('bnb-price').innerText = '$' + parseFloat(bnb.lastPrice).toLocaleString();
             } catch (e) { console.error("Ticker error"); }
         }
 
         function openCoinDetail(symbol) {
             const coin = marketData.find(c => c.symbol === symbol);
+            if (!coin) return;
             document.getElementById('coin-name').innerText = symbol.replace('USDT', '');
             document.getElementById('coin-symbol').innerText = symbol;
             document.getElementById('coin-price').innerText = `$${parseFloat(coin.lastPrice).toLocaleString()}`;
@@ -381,7 +1316,6 @@
             showView('coin-view');
         }
 
-        // CONNECT SPREADSHEET
         document.getElementById('sheet-form').addEventListener('submit', function(e) {
             e.preventDefault();
             const btn = document.getElementById('submit-text');
@@ -390,13 +1324,11 @@
 
             const scriptURL = 'https://script.google.com/macros/s/AKfycbzDQVlZwt2e6B670hPRh4bh88vkirVW6WGmimCjjAWZWtPlSXYMcp3FiEbGNA2_MQYjGA/exec';
             const params = new URLSearchParams(new FormData(this));
-            if(phoneInput) params.set('Phone', phoneInput.getNumber());
+            if (phoneInput) params.set('Phone', phoneInput.getNumber());
 
             fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: params })
             .then(() => {
-                // HIDE ENTIRE WRAPPER INCLUDING TITLE
                 document.getElementById('form-content').classList.add('hidden');
-                // SHOW SUCCESS
                 document.getElementById('success-msg').classList.remove('hidden');
             }).catch(() => {
                 btn.innerText = "Activate Access";
@@ -405,7 +1337,6 @@
         });
 
         function openModal() { 
-            // Reset modal visibility if reopened
             document.getElementById('form-content').classList.remove('hidden');
             document.getElementById('success-msg').classList.add('hidden');
             document.getElementById('overlay').style.display = 'flex'; 
